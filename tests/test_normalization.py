@@ -18,7 +18,7 @@ class NormalizationTest(unittest.TestCase):
         
     def prepare_arrays(self):
         N,X,Y = 10,128,128
-        data = np.random.randint(50,3e4,size=(N,X,Y), dtype="uint16")
+        data = np.random.randint(500,1000,size=(N,X,Y), dtype="uint16")
         dark = np.random.randint(50,150,size=(N,X,Y), dtype="uint16")
         flat = np.random.randint(400,800,size=(N,X,Y),dtype="uint16")
         return data, dark, flat
@@ -32,11 +32,11 @@ class NormalizationTest(unittest.TestCase):
         # Numpy normalisation on CPU 
         normalized_numpy = normdata_np(data, dark, flat)
 
-        print(normalized_tomopy.dtype, normalized_numpy.get().dtype)
+        print(normalized_tomopy.dtype, normalized_numpy.dtype)
         
         # Assert
-        np.testing.assert_array_equal(normalized_tomopy, normalized_numpy.get(),
-                                      err_msg="The normalized data array has not been updateed correctly")
+        np.testing.assert_array_almost_equal(normalized_tomopy, normalized_numpy,
+                                             err_msg="The normalized data array has not been updateed correctly")
 
     
     def test_normalize_simple_cupy(self):
@@ -46,7 +46,7 @@ class NormalizationTest(unittest.TestCase):
         flat_gpu = cupy.asarray(flat)
         
         # TomoPy normalisation on CPU
-        normalized_cpu = normdata_cpu(data,dark,flat)
+        normalized_cpu = normdata_np(data,dark,flat)
 
         # Simple CuPy normalisation on GPU 
         normalized_gpu = normdata_gpu(data_gpu, dark_gpu, flat_gpu)
@@ -54,7 +54,7 @@ class NormalizationTest(unittest.TestCase):
         print(normalized_cpu.dtype, normalized_gpu.get().dtype)
         
         # Assert
-        np.testing.assert_array_equal(normalized_cpu, normalized_gpu.get(),
-                                      err_msg="The normalized data array has not been updateed correctly")
+        np.testing.assert_array_almost_equal(normalized_cpu, normalized_gpu.get(),
+                                             err_msg="The normalized data array has not been updateed correctly")
         
     
