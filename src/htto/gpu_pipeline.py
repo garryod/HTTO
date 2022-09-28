@@ -16,7 +16,7 @@ from htto.tasks.data_loading.garry import (
     load_projections_distributed,
 )
 from htto.tasks.filtering.original_gpu import filter_data
-from htto.tasks.normalization.original_gpu import normalize_data
+from htto.tasks.normalization.cupy_kernels_gpu import normalize_data
 from htto.tasks.reconstruction.tomopy_gpu import reconstruct
 from htto.tasks.reslice.original import reslice
 from htto.tasks.saving.original import save_data
